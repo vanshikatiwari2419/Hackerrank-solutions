@@ -1,0 +1,8 @@
+long last_prisoner(long n, long m, int s) {
+    long last_prisoner = ((long)s + m - 1) % n;
+    return (int)last_prisoner == 0 ? (int)n : (int)last_prisoner;
+}
+
+int prisoner(int n, int m, int s) {
+    return last_prisoner(n, m, s);
+}
