@@ -1,0 +1,43 @@
+void kaprekarNumbers(int p, int q) {
+    int found = 0;  
+    
+    for (long i = p; i <= q; i++) {
+        long sq = i * i;
+
+        char sq_str[30];
+        sprintf(sq_str, "%ld", sq);
+
+        int d = 0, len = strlen(sq_str);
+        long temp = i;
+
+        while (temp > 0) {
+            d++;
+            temp /= 10;
+        }
+
+        char left[30] = "0";   
+        char right[30] = "0";
+
+        if (d <= len)
+            strcpy(right, sq_str + len - d);
+        else
+            strcpy(right, sq_str);
+
+        if (len - d > 0) {
+            strncpy(left, sq_str, len - d);
+            left[len - d] = '\0';
+        }
+
+        long left_val = atol(left);
+        long right_val = atol(right);
+
+        if (left_val + right_val == i) {
+            printf("%ld ", i);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("INVALID RANGE");
+    }
+}
