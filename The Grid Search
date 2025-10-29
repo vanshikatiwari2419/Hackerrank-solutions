@@ -1,0 +1,23 @@
+char* gridSearch(int G_count, char** G, int P_count, char** P) {
+    int R = G_count;   
+    int C = strlen(G[0]); 
+    int r = P_count;  
+    int c = strlen(P[0]); 
+    for (int i = 0; i <= R - r; i++) {
+        for (int j = 0; j <= C - c; j++) {
+            bool found = true;
+            for (int pi = 0; pi < r && found; pi++) {
+                for (int pj = 0; pj < c; pj++) {
+                    if (G[i + pi][j + pj] != P[pi][pj]) {
+                        found = false;
+                        break;
+                    }
+                }
+            }
+            if (found) {
+                return "YES";
+            }
+        }
+    }
+    return "NO";
+}
