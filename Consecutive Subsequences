@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int T;
+    if (scanf("%d", &T) != 1) return 0;
+    while (T--) {
+        int n, k;
+        scanf("%d %d", &n, &k);
+        
+        long long *count_mod = (long long *)calloc(k, sizeof(long long));
+        count_mod[0] = 1;   
+
+        long long result = 0;
+        long long sum = 0;
+        for (int i = 0; i < n; ++i) {
+            int x;
+            scanf("%d", &x);
+            sum = (sum + x) % k;
+            if (sum < 0) sum += k;
+            result += count_mod[ sum ];
+            count_mod[ sum ] += 1;
+        }
+
+        printf("%lld\n", result);
+        free(count_mod);
+    }
+    return 0;
+}
