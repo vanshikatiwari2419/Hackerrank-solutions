@@ -1,0 +1,73 @@
+long long gridlandMetro(int n, int m, int k, int track_rows, int track_columns, int **track) {
+    if (k == 0) {
+        return (long long)n * (long long)m;
+    }
+    typedef struct {
+        long long c1;
+        long long c2;
+    } Range;
+    typedef struct {
+        long long row;
+        Range *intervals;
+        int count;
+        int capacity;
+    } Row;
+    Row *rows = malloc(k * sizeof(Row));
+    int row_count = 0;
+    int find_or_add_row(long long r) {
+        for (int i = 0; i < row_count; i++) {
+            if (rows[i].row == r) return i;
+        }
+        rows[row_count].row = r;
+        rows[row_count].count = 0;
+        rows[row_count].capacity = 4;
+        rows[row_count].intervals = malloc(4 * sizeof(Range));
+        return row_count++;
+    }
+    for (int i = 0; i < k; i++) {
+        long long r = track[i][0];
+        long long c1 = track[i][1];
+        long long c2 = track[i][2];
+        if (c1 > c2) { long long tmp = c1; c1 = c2; c2 = tmp; }
+        int idx = find_or_add_row(r);
+        Row *row = &rows[idx];
+        if (row->count == row->capacity) {
+            row->capacity *= 2;
+            row->intervals = realloc(row->intervals, row->capacity * sizeof(Range));
+        }
+        row->intervals[row->count].c1 = c1;
+        row->intervals[row->count].c2 = c2;
+        row->count++;
+    }
+    int cmp(const void *a, const void *b) {
+        const Range *x = (const Range *)a;
+        const Range *y = (const Range *)b;
+        if (x->c1 == y->c1) return (x->c2 < y->c2) ? -1 : 1;
+        return (x->c1 < y->c1) ? -1 : 1;
+    }
+    long long occupied = 0;
+    for (int i = 0; i < row_count; i++) {
+        Row *row = &rows[i];
+        qsort(row->intervals, row->count, sizeof(Range), cmp);
+        long long start = row->intervals[0].c1;
+        long long end = row->intervals[0].c2;
+        for (int j = 1; j < row->count; j++) {
+            long long s = row->intervals[j].c1;
+            long long e = row->intervals[j].c2;
+            if (s <= end + 1) {
+                if (e > end) end = e;
+            } else {
+                occupied += (end - start + 1);
+                start = s;
+                end = e;
+            }
+        }
+        occupied += (end - start + 1);
+    }
+    for (int i = 0; i < row_count; i++) {
+        free(rows[i].intervals);
+    }
+    free(rows);
+    long long total = (long long)n * (long long)m;
+    return total - occupied;
+}
