@@ -1,0 +1,33 @@
+string happyLadybugs(string b) {
+    int freq[26] = {0};
+    bool hasUnderscore = false;
+
+    for (char c : b) {
+        if (c == '_') {
+            hasUnderscore = true;
+        } else {
+            freq[c - 'A']++;
+        }
+    }
+
+    if (hasUnderscore) {
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] == 1) {
+                return "NO";
+            }
+        }
+        return "YES";
+    }
+
+    int n = b.size();
+    for (int i = 0; i < n; i++) {
+        bool happy = false;
+
+        if (i > 0 && b[i] == b[i - 1]) happy = true;
+        if (i < n - 1 && b[i] == b[i + 1]) happy = true;
+
+        if (!happy) return "NO";
+    }
+
+    return "YES";
+}
