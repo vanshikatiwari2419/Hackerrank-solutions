@@ -1,0 +1,19 @@
+int anagram(string s) {
+    int n = s.size();
+    if (n % 2 == 1) return -1;
+    int half = n / 2;
+    int cntL[26] = {0};
+    int cntR[26] = {0};
+    for (int i = 0; i < half; i++) {
+        cntL[s[i] - 'a']++;
+    }
+    for (int i = half; i < n; i++) {
+        cntR[s[i] - 'a']++;
+    }
+    int deletions = 0;
+    for (int i = 0; i < 26; i++) {
+        if (cntL[i] > cntR[i])
+            deletions += cntL[i] - cntR[i];
+    }
+    return deletions;
+}
